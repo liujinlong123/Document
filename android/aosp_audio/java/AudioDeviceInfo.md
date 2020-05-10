@@ -69,5 +69,38 @@
     > 该`AudioPort`可支持多种采样率、通道掩码设置、编码、音频增益。
 
 2. 类的构建
+    
+    ```java
+    AudioPort(AudioHandle handle, int role, String name,
+            int[] samplingRates, int[] channelMasks, int[] channelIndexMasks,
+            int[] formats, AudioGain[] gains) {
 
-3. 与AudioPort相关的类，`AudioHandle`和`AudioPortConfig`，在下面研究。
+        // Audio Port 唯一标识符
+        mHandle = handle;
+        mRole = role;
+        mName = name;
+        mSamplingRates = samplingRates;
+        mChannelMasks = channelMasks;
+        mChannelIndexMasks = channelIndexMasks;
+        mFormats = formats;
+        mGains = gains;
+    }
+    ```
+
+3. 与AudioPort相关的类，`AudioHandle`、`AudioPortConfig`、`AudioGain`，在下面研究。
+
+### AudioHandle类描述(AudioPort中维护了一个`AudioHandle`对象)
+
+1. 类的含义：唯一标识符
+   
+    >The AudioHandle is used by the audio framework implementation to uniquely identify a particular component of the routing topology(AudioPort or AudioPatch)  
+
+2. 类的属性、构建：只有一个int型的变量`id`作为唯一标识符
+   
+   ```java
+    AudioHandle(int id) {
+        mId = id;
+    }
+   ```
+
+### AudioGain
