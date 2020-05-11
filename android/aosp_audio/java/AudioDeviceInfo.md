@@ -66,10 +66,13 @@
 
 1. 类的含义：`AudioPort`是对"音频节点"的抽象，该对象由framework创建，是一个隐藏类；`AudioPort`包含了对"音频节点"所支持的各种属性的描述：角色(Source or Sink)、名称、采样率(Sample)、通道掩码(Channel position mask)、索引通道掩码(Channel index mask)、编码(Encoding)、音频增益(Audio Gain)。
 
-    > 该`AudioPort`可支持多种采样率、通道掩码设置、编码、音频增益。
+    > 该`AudioPort`可支持多种采样率、通道掩码设置、编码、音频增益。  
+    >
+    >- `AudioPort`维护了一个`AudioHandle`对象和一个`AudioGain`数组，AudioHandle为该Audio Port的唯一标识符，AudioGain数组为Audio Port所支持的音频增益
+    >- `AudioPort`类中还包含创建`AudioPortConfig`的操作，该类的结构与`AudioGain`非常类似
 
 2. 类的构建
-    
+
     ```java
     AudioPort(AudioHandle handle, int role, String name,
             int[] samplingRates, int[] channelMasks, int[] channelIndexMasks,
@@ -89,18 +92,61 @@
 
 3. 与AudioPort相关的类，`AudioHandle`、`AudioPortConfig`、`AudioGain`，在下面研究。
 
-### AudioHandle类描述(AudioPort中维护了一个`AudioHandle`对象)
+### AudioHandle类描述(`AudioPort`中维护了一个`AudioHandle`对象)
 
 1. 类的含义：唯一标识符
-   
+
     >The AudioHandle is used by the audio framework implementation to uniquely identify a particular component of the routing topology(AudioPort or AudioPatch)  
 
 2. 类的属性、构建：只有一个int型的变量`id`作为唯一标识符
-   
+
    ```java
     AudioHandle(int id) {
         mId = id;
     }
    ```
 
-### AudioGain
+### AudioGain类描述(`AduioPort`中维护了一个`AudioGain`对象)
+
+1. 类的含义：增益控制器；指定音频端口的增益控制器，是对该音频端口增益控制的抽象
+
+    > The AudioGain describes a gain controller. Gain controllers are exposed by audio ports when the gain is configurable at this port's input or output. Gain values are expressed in millibels.
+    >> Note：`AudioGain`源码的类描述非常清晰
+
+2. 类的属性：对Channel的控制方式、Channel的使能、增益最小值、增益最大值、增益默认值、增益步进值、爬坡增益最小时间段、爬坡增益最大时间段。
+
+    >  A gain controller has the following attributes:
+    >
+    >- mode: defines modes of operation or features  
+        MODE_JOINT: all channel gains are controlled simultaneously  
+        MODE_CHANNELS: each channel gain is controlled individually  
+        MODE_RAMP: ramps can be applied when gain changes  
+    >- channel mask: indicates for which channels the gain can be controlled
+    >- min value: minimum gain value in millibel
+    >- max value: maximum gain value in millibel
+    >- default value: gain value after reset in millibel
+    >- step value: granularity of gain control in millibel
+    >- min ramp duration: minimum ramp duration in milliseconds
+    >- max ramp duration: maximum ramp duration in milliseconds
+
+3. 类的构建：`AudioGain`的创建增加了属性`index`, 该属性应用于`AudioGainConfig`  
+
+    ```java
+    // The channel mask passed to the constructor is as specified in AudioFormat
+    // (e.g. AudioFormat.CHANNEL_OUT_STEREO)
+    AudioGain(int index, int mode, int channelMask,
+                        int minValue, int maxValue, int defaultValue, int stepValue,
+                        int rampDurationMinMs, int rampDurationMaxMs) {
+        mIndex = index;
+        mMode = mode;
+        mChannelMask = channelMask;
+        mMinValue = minValue;
+        mMaxValue = maxValue;
+        mDefaultValue = defaultValue;
+        mStepValue = stepValue;
+        mRampDurationMinMs = rampDurationMinMs;
+        mRampDurationMaxMs = rampDurationMaxMs;
+    }
+    ```
+
+4. 与AudioGain相关的类`AudioGainConfig`，在后面研究(暂不研究)  
