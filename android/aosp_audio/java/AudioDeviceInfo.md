@@ -150,3 +150,20 @@
     ```
 
 4. 与AudioGain相关的类`AudioGainConfig`，在后面研究(暂不研究)  
+
+### AudioDevicePort类描述(维护了一个`AudioHandle`对象和一个`AudioGain`数组)  
+
+1. 类的含义：`AudioDevicePort`是`AudioPort`的子类，是特殊的audio port，是对AudioPort的进一步抽象。
+
+    > The AudioDevicePort is a specialized type of AudioPort describing an input (e.g microphone) or output device (e.g speaker) of the system.
+
+2. 类的属性：增加了`type`和`address`属性
+
+    > In addition to base audio port attributes, the device descriptor contains:
+    >
+    >- the device type (e.g AudioManager.DEVICE_OUT_SPEAKER)
+    >- the device address (e.g MAC adddress for AD2P sink).
+    >
+    >> 关于`address`的描述，在源码中说明的非常清晰
+
+3. 与`AudioDevicePort`相关的类是`AudioDevicePortConfig`，`AudioDevicePort`中含有`buildConfig`方法，类的结构与`AudioGain`和`AudioPort`非常类似
