@@ -6,29 +6,20 @@
 
 2. AudioAttributes  
 
-3. AudioDeviceInfo  
+3. AudioDeviceInfo、AudioDevicePort、AudioDevicePortConfig、AudioPort、AudioPortConfig、AudioGain、AudioGainConfig、AudioHandle类之间的关系
+![AudioDeviceInfo类间关系](./image/AudioDeviceInfo.png)
 
-4. AudioDevicePort
-
-5. AudioPort
-
-6. AudioFormat  
+4. AudioFormat  
 AudioFormat是对Audio Frame格式的抽象，相关概念Sample Rate、Encoding、Channel Mask、Audio Frame.
 
-7. AudioRouting  
+5. AudioRouting  
 
-8. AudioSystem  
+6. AudioSystem  
 
-9. AudioManager  
+7. AudioManager  
 
-10. AudioTimeStamp  
+8. AudioTimeStamp  
 
-11. IAudioService  
+9. IAudioService  
 
-12. AudioPortConfig  
-
-13. AudioGain  
-
-14. AudioHandle  
-
-15. AudioMixPort
+10. AudioMixPort  
