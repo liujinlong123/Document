@@ -1,5 +1,7 @@
 # AudioDeviceInfo阅读理解  
 
+>Author: 刘金龙&#160;&#160;&#160;&#160;&#160;&#160;&#160;Date: 2020.05.11
+
 ## AudioDeviceInfo类描述
 
 1. AudioDeviceInfo类的创建  
