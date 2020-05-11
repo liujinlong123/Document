@@ -167,3 +167,7 @@
     >> 关于`address`的描述，在源码中说明的非常清晰
 
 3. 与`AudioDevicePort`相关的类是`AudioDevicePortConfig`，`AudioDevicePort`中含有`buildConfig`方法，类的结构与`AudioGain`和`AudioPort`非常类似
+
+## AudioDeviceInfo与上面各类之间的关系描述
+
+![AudioDeviceInfo类间关系](./image/AudioDeviceInfo.png)
