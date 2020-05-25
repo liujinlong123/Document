@@ -175,13 +175,13 @@
 4. 执行命令生成`.o`文件, `.o`文件是源码编译出的二进制文件
 
     ```bash
-    g++ -c -fPIC -I${JAVA_HOME}/include -I${JAVA_HOME}/include/linux Test.cpp -o Test.o
+    > g++ -c -fPIC -I${JAVA_HOME}/include -I${JAVA_HOME}/include/linux Test.cpp -o Test.o
     ```
 
 5. 执行命令生成`libnative.so`
 
     ```bash
-    g++ -shared -fPIC -o libnative.so Test.o -lc
+    > g++ -shared -fPIC -o libnative.so Test.o -lc
     ```
 
     + `-l`: 编译程序到系统默认路进搜索，如果找不到，到当前目录，如果当前目录找不到，则到LD_LIBRARY_PATH等环境变量置顶的路进去查找，如果还找不到，那么编译程序提示找不到库
@@ -190,7 +190,7 @@
 6. 运行程序  
 
     ```bash
-    java -cp . -Djava.library.path=/NATIVE_SHARED_LIB_FOLDER Test
+    > java -cp . -Djava.library.path=/NATIVE_SHARED_LIB_FOLDER Test
     ```
 
     ```bash
@@ -203,4 +203,122 @@
     ```
 
     + `-D`: 程序启动参数  
-    + `java.library.path`: This way Java will know where to look for our native libs
+    + `java.library.path`: This way Java will know where to look for our native libs  
+
+### 实践三(传入参数)  
+
+1. `Test.java`
+
+    ```java
+    public class Test {
+        static {
+            System.loadLibrary("native");
+        }
+
+        private native long sumIntegers(int first, int second);
+
+        private native String sayHelloToMe(String name, boolean isFemale);
+
+        public static void main(String[] args) {
+            Test test = new Test();
+
+            System.out.println("程序开始执行");
+
+            System.out.println("1 + 2 = " + test.sumIntegers(1, 2));
+
+            System.out.println(test.sayHelloToMe("my name", false));
+
+            System.out.println("程序执行结束");
+        }
+    }
+    ```
+
+2. `Test.cpp`
+
+    ```cpp
+    #include "Test.h"
+    #include <iostream>
+
+    using namespace std;
+
+    JNIEXPORT jlong JNICALL Java_Test_sumIntegers
+      (JNIEnv * env, jobject thisObject, jint first, jint second) {
+          cout << "C++ The numbers received are: " << first << " and " << second << endl;
+          return (long)first + (long)second;
+      }
+
+    JNIEXPORT jstring JNICALL Java_Test_sayHelloToMe
+      (JNIEnv * env, jobject thisObject, jstring name, jboolean isFemale) {
+          const char* nameCharPointer = env->GetStringUTFChars(name, NULL);
+          string title;
+          if (isFemale) {
+              title = "Ms. ";
+          } else {
+              title = "Mr. ";
+          }
+
+          string fullname = title + nameCharPointer;
+          return env->NewStringUTF(fullname.c_str());
+      }
+    ```
+
+### 实践四(传入对象)  
+
+1. `Test.java`
+
+    ```java
+    public class Test {
+        static {
+            System.loadLibrary("native");
+        }
+
+        public native User createUser(String name, double balance);
+
+        public native String printUserData(User user);
+
+        public static void main(String[] args) {
+            Test test = new Test();
+
+            System.out.println("开始执行");
+
+            User user = test.createUser("my name", 12.5);
+
+            System.out.println("创建完毕" + test.printUserData(user));
+        }
+    }
+    ```
+
+2. `Test.cpp`
+
+    ```cpp
+    #include "Test.h"
+    #include <iostream>
+
+    using namespace std;
+
+    JNIEXPORT jobject JNICALL Java_Test_createUser
+      (JNIEnv *env, jobject thisObject, jstring name, jdouble balance) {
+
+          jclass userClass = env->FindClass("User");
+          jobject newUser = env->AllocObject(userClass);
+
+          jfieldID nameField = env->GetFieldID(userClass, "name", "Ljava/lang/String;");
+          jfieldID balanceField = env->GetFieldID(userClass, "balance", "D");
+
+          env->SetObjectField(newUser, nameField, name);
+          env->SetDoubleField(newUser, balanceField, balance);
+
+          return newUser;
+      }
+
+    JNIEXPORT jstring JNICALL Java_Test_printUserData
+      (JNIEnv *env, jobject thisObject, jobject user) {
+
+          jclass userClass = env->GetObjectClass(user);
+          jmethodID methodId = env->GetMethodID(userClass, "getUserInfo", "()   Ljava/lang/String;");
+
+          jstring result = (jstring)env->CallObjectMethod(user, methodId);
+
+          return result;
+      }
+    ```
