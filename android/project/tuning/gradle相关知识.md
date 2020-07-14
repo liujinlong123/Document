@@ -184,7 +184,7 @@ dependencies {
 4. 定义好产品之后，就可以针对不同的`productFlavor`进行配置，其配置将覆盖`defaultConfig`
 
     ```gradle
-     flavorDimensions "channel"
+    flavorDimensions "channel"
     // 多渠道定义
     productFlavors {
 
@@ -197,6 +197,11 @@ dependencies {
             ]
         }
     }
+    ```
+
+    ```xml
+    <!-- 渠道信息 -->
+    <meta-data android:name="APP_CHANNEL" android:value="${channel}"/>
     ```
 
 5. 覆盖`defaultConfig`的配置详细见官方文档[Configure build variants](https://developer.android.google.cn/studio/build/build-variants#product-flavors)
