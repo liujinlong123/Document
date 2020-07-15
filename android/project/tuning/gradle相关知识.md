@@ -1,5 +1,7 @@
 # Tuning中涉及的gradle的相关内容
 
+>Author: Aiden&#160;&#160;&#160;&#160;&#160;&#160;&#160;Date: 2020.07.15
+
 ## 文档地址
 
 1. 官方文档地址[Gradle Overview](https://developer.android.google.cn/studio/build#settings-file)
