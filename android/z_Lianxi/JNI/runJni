@@ -1,0 +1,171 @@
+#! /bin/bash
+
+#----------------------------------------------------------------------------
+# 常量定义(一般不需要修改)
+#--------------------------------------
+
+# cpp源文件
+MAKE_SOURCE_FILE="Command.cpp"
+# 编译生成so的中间文件middle.o
+MAKE_TO_SO_MIDDLE_O="middle.o"
+# 生成so的名称
+MAKE_TO_SO_NAME="libnative.so"
+
+# java源文件
+JAVA_FILE_NAME="Command"
+
+#----------------------------------------------------------------------------
+# 文件夹定义(一般不需要修改)
+#--------------------------------------
+
+# SO生成位置
+SO_DIR="so"
+# JAVA源文件
+JAVA_DIR="java"
+# 中间生成文件
+MIDDLE_DIR="middle"
+# cpp源文件
+BUILD_JNI_DIR="build_jni"
+
+#----------------------------------------------------------------------------
+# 方法定义
+#--------------------------------------
+
+# 编译生成so
+make_to_so()
+{
+    echo "编译生成so"
+    g++ -c -fPIC -I${JAVA_HOME}/include -I${JAVA_HOME}/include/linux ${BUILD_JNI_DIR}/${MAKE_SOURCE_FILE} -o ${MIDDLE_DIR}/${MAKE_TO_SO_MIDDLE_O}
+    g++ -shared -fPIC -o ${SO_DIR}/${MAKE_TO_SO_NAME} ${MIDDLE_DIR}/${MAKE_TO_SO_MIDDLE_O} -lc
+
+    delete_middle_so_o;
+}
+
+# 删除编译so生成的中间文件
+delete_middle_so_o()
+{
+    # echo "删除编译so生成的中间文件"
+    rm ${MIDDLE_DIR}/*
+}
+
+# 编译Java文件
+javac_source_file()
+{
+    echo "编译Java文件"
+    javac ${JAVA_DIR}/${JAVA_FILE_NAME}.java
+}
+
+# 运行程序
+run_program()
+{
+    echo "运行程序"
+
+    echo "----------------------------------------"
+    # 输出回车
+    echo -e
+    java -cp ${JAVA_DIR}/ -Djava.library.path=${SO_DIR}/ ${JAVA_FILE_NAME}
+
+    echo -e
+}
+
+# 删除Java - *.class文件
+delete_java_class_file()
+{
+    rm ${JAVA_DIR}/*.class
+}
+
+# 删除so文件
+delete_so_file()
+{
+    rm ${SO_DIR}/*
+}
+
+# 删除so和.class文件
+delete_all()
+{
+    delete_java_class_file;
+    delete_so_file;
+}
+
+# 删除(带参数)
+delete()
+{
+    case $1 in
+        a)
+        echo "删除so和.class文件"
+        delete_all;
+        ;;
+        s)
+        echo "删除so文件"
+        delete_so_file;
+        ;;
+        j)
+        echo "删除Java - *.class文件"
+        delete_java_class_file;
+        ;;
+    esac
+}
+
+# 帮助
+help_command()
+{
+    echo "Help"
+	echo "-a: 编译生成so -> 编译Java文件 -> 运行程序 -> 删除so和.class文件"
+	echo "-c: 编译生成so"
+	echo "-j: 编译Java文件"
+	echo "-r: 运行程序"
+	echo "-d: 删除中间文件[a(so, .class) s(so) j(class)]"
+	echo "-h: 帮助"
+}
+
+
+#----------------------------------------------------------------------------
+# 命令定义
+#--------------------------------------
+
+#while getopts "a:s:i:l:u:c:h:" opt 	// 带参数
+while getopts "acjrd:h" opt
+do
+    case $opt in
+        a)
+        make_to_so;
+        javac_source_file;
+        run_program;
+        # delete $OPTARG;
+        ;;
+        c)
+        make_to_so;
+        ;;
+        j)
+        javac_source_file;
+        ;;
+        r)
+        run_program;
+        ;;
+        d)
+        delete $OPTARG;
+        ;;
+        h)
+        help_command;
+        ;;
+        ?)
+        echo "未知参数"
+        exit 1
+        ;;
+    esac
+done
+
+
+# g++ -c -fPIC -I${JAVA_HOME}/include -I${JAVA_HOME}/include/linux build_jni/Command.cpp -o middle/Command.o
+
+# g++ -shared -fPIC -o so/libnative.so middle/Command.o -lc
+
+# javac java/Command.java
+
+# java -cp java/ -Djava.library.path=so/ Command
+
+# rm java/*.class
+
+# rm middle/*
+
+# rm so/*

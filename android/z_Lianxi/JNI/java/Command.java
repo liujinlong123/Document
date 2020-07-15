@@ -10,6 +10,10 @@ import java.util.List;
 public class Command {
     public static final String TAG = "Command";
 
+    static {
+        System.loadLibrary("native");
+    }
+
     public static native void handleCommand(byte[] data);
 
     public static void main(String[] args) {
