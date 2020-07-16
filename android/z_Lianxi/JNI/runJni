@@ -31,6 +31,13 @@ BUILD_JNI_DIR="build_jni"
 # 方法定义
 #--------------------------------------
 
+# 编译生成对应头文件
+javac_h_h()
+{
+    echo "编译生成对应头文件"
+    javac -h ./${BUILD_JNI_DIR} ${JAVA_FILE_NAME}.java
+}
+
 # 编译生成so
 make_to_so()
 {
@@ -114,6 +121,7 @@ help_command()
 	echo "-c: 编译生成so"
 	echo "-j: 编译Java文件"
 	echo "-r: 运行程序"
+    echo "-t: 编译生成对应头文件"
 	echo "-d: 删除中间文件[a(so, .class) s(so) j(class)]"
 	echo "-h: 帮助"
 }
@@ -124,7 +132,7 @@ help_command()
 #--------------------------------------
 
 #while getopts "a:s:i:l:u:c:h:" opt 	// 带参数
-while getopts "acjrd:h" opt
+while getopts "acjrtd:h" opt
 do
     case $opt in
         a)
@@ -141,6 +149,9 @@ do
         ;;
         r)
         run_program;
+        ;;
+        t)
+        javac_h_h;
         ;;
         d)
         delete $OPTARG;
