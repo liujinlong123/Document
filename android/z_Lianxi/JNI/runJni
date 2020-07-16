@@ -59,7 +59,7 @@ delete_middle_so_o()
 javac_source_file()
 {
     echo "编译Java文件"
-    javac ${JAVA_DIR}/${JAVA_FILE_NAME}.java
+    javac ${JAVA_DIR}/*.java
 }
 
 # 运行程序
