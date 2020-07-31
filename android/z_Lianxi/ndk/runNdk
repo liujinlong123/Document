@@ -1,0 +1,113 @@
+#! /bin/bash
+
+#----------------------------------------------------------------------------
+# 常量定义(一般不需要修改)
+#--------------------------------------
+
+# NDK路径
+NDK_PATH="/home/aw/Android/Sdk/ndk/21.3.6528147"
+# NDK编译lib文件夹
+NDK_TARGET_LIB="./libs"
+# NDK编译obj文件夹
+NDK_TARGET_OBJ="./obj"
+
+
+#----------------------------------------------------------------------------
+# 方法定义
+#--------------------------------------
+
+# 编译生成静态库或者动态库
+run_build()
+{
+    case $1 in
+        a)
+        echo "编译生成.a文件"
+        ${NDK_PATH}/ndk-build -v;
+        ;;
+        s)
+        echo "编译生成.so文件"
+        ${NDK_PATH}/ndk-build NDK_PROJECT_PATH=. NDK_APPLICATION_MK=./Application.mk APP_BUILD_SCRIPT=./Android.mk
+        ;;
+    esac
+}
+
+# 删除NDK编译生成的lib文件夹
+delete_lib()
+{
+    rm -rf ${NDK_TARGET_LIB}
+}
+
+# 删除NDK编译生成的obj文件夹
+delete_obj()
+{
+    rm -rf ${NDK_TARGET_OBJ}
+}
+
+# 删除所有文件
+delete_all()
+{
+    delete_lib;
+    delete_obj;
+}
+
+# 删除(带参数)
+delete()
+{
+    case $1 in
+        a)
+        echo "删除lib和obj文件夹"
+        delete_all;
+        ;;
+        l)
+        echo "删除lib文件夹"
+        delete_lib;
+        ;;
+        o)
+        echo "删除obj文件夹"
+        delete_obj;
+        ;;
+    esac
+}
+
+# 帮助
+help_command()
+{
+    echo "Help"
+	echo "-b: 编译 (a: 静态库 s: 动态库)"
+    echo "-d: 删除中间文件[a(lib, obj) l(lib) o(obj)]"
+	echo "-h: 帮助"
+}
+
+# clean
+ndk_clean()
+{
+    echo "ndk clean"
+    ./ndk-build clean
+}
+
+#----------------------------------------------------------------------------
+# 命令定义
+#--------------------------------------
+
+#while getopts "a:s:i:l:u:c:h:" opt 	// 带参数
+while getopts "b:cd:h" opt
+do
+    case $opt in
+        b)
+        run_build $OPTARG;
+        ;;
+        c)
+        ndk_clean;
+        ;;
+        d)
+        delete $OPTARG;
+        ;;
+        h)
+        help_command;
+        ;;
+        ?)
+        echo "未知参数"
+        exit 1
+        ;;
+    esac
+done
