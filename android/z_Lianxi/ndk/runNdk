@@ -112,3 +112,5 @@ do
         ;;
     esac
 done
+
+# ndk-stack -sym ~/workLiu/own/Android/Document/android/z_Lianxi/ndk/libs/armeabi-v7a/libcommand-jni.so -dump tombstone_34 > foo.log
