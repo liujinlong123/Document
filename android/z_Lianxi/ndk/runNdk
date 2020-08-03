@@ -113,4 +113,8 @@ do
     esac
 done
 
+# ndk-stack -sym obj中so -dump tombstone_3 > foo.log
 # ndk-stack -sym ~/workLiu/own/Android/Document/android/z_Lianxi/ndk/libs/armeabi-v7a/libcommand-jni.so -dump tombstone_34 > foo.log
+
+# addr2line -f -e obj中so 地址
+# addr2line -f -e ~/workLiu/own/Android/Document/android/z_Lianxi/ndk/obj/local/armeabi-v7a/libcommand-jni.so 0000a353
