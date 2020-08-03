@@ -26,7 +26,7 @@ public class Command {
         for (int i = 0; i < data.length; i++) {
             list.add(data[i]);
         }
-
+        
         byte[] copyData = toArray(list);
         handleCommand(copyData);
     }

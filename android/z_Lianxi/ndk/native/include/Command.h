@@ -8,12 +8,12 @@
 extern "C" {
 #endif
 /*
- * Class:     Command
- * Method:    handleCommand
- * Signature: ([B)V
+ * Class:     Commands
+ * Method:    stringFromJni
+ * Signature: (Ljava/lang/String;)Ljava/lang/String;
  */
-JNIEXPORT void JNICALL Java_Command_handleCommand
-  (JNIEnv *, jclass, jbyteArray);
+JNIEXPORT jstring JNICALL Java_Command_stringFromJni
+  (JNIEnv *, jclass, jstring);
 
 #ifdef __cplusplus
 }
