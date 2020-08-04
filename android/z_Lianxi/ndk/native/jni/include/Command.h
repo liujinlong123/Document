@@ -12,8 +12,8 @@ extern "C" {
  * Method:    stringFromJni
  * Signature: (Ljava/lang/String;)Ljava/lang/String;
  */
-JNIEXPORT jstring JNICALL Java_Command_stringFromJni
-  (JNIEnv *, jclass, jstring);
+JNIEXPORT jstring JNICALL
+Java_com_loostone_client_JniUtil_stringFromJNI(JNIEnv *env, jclass clazz, jstring command);
 
 #ifdef __cplusplus
 }

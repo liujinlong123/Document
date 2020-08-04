@@ -15,10 +15,12 @@ LOCAL_MODULE := command-jni
 LOCAL_CPP_EXTENSION := .cxx .cpp .cc
 
 # 头文件的搜索路径
-LOCAL_C_INCLUDES := ${LOCAL_PATH}/native/include
+LOCAL_C_INCLUDES := ${LOCAL_PATH}/native/include \
+					${LOCAL_PATH}/native/jni/include
 
 # 源文件地址, 这里必须是c或者c++文件
-LOCAL_SRC_FILES := ${LOCAL_PATH}/native/source/Command.cpp
+LOCAL_SRC_FILES := ${LOCAL_PATH}/native/jni/source/Command.cpp
+
 
 # include $(CLEAR_VARS)
 # LOCAL_MODULE := libPmAsiicEndec

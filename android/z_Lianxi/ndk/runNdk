@@ -11,6 +11,10 @@ NDK_TARGET_LIB="./libs"
 # NDK编译obj文件夹
 NDK_TARGET_OBJ="./obj"
 
+# 导入文件
+NDK_BUILD_NATIVE_SOURCE="./source/*"
+NDK_BUILD_NATIVE_INCLUDE="./include/*"
+
 
 #----------------------------------------------------------------------------
 # 方法定义
@@ -51,6 +55,13 @@ delete_all()
     delete_obj;
 }
 
+# 删除导入文件
+delete_exteral_source()
+{
+    rm -rf ${NDK_BUILD_NATIVE_SOURCE};
+    rm -rf ${NDK_BUILD_NATIVE_INCLUDE};
+}
+
 # 删除(带参数)
 delete()
 {
@@ -66,6 +77,10 @@ delete()
         o)
         echo "删除obj文件夹"
         delete_obj;
+        ;;
+        s)
+        echo "删除导入文件"
+        delete_exteral_source;
         ;;
     esac
 }
